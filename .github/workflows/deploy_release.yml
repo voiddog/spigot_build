@@ -1,10 +1,11 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Create Release
+name: Deploy spigot release
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
+  workflow_dispatch:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
@@ -13,14 +14,14 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    name: Upload Release Asset
+    name: Build Spigot and Upload to Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Build project # This would actually build your project, using zip for an example artifact
+      - name: Build # This would actually build your project, using zip for an example artifact
         run: |
-          java -jar BuildTools.jar
+          java -jar BuildTools.jar -o output
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -38,6 +39,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./my-artifact.zip
-          asset_name: my-artifact.zip
+          asset_path: output
+          asset_name: spigot.zip
           asset_content_type: application/zip
