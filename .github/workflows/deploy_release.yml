@@ -19,6 +19,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Setup Java JDK
+        uses: actions/setup-java@v1.4.4
+        with:
+          java-version: '17'
       - name: Build # This would actually build your project, using zip for an example artifact
         run: |
           java -jar BuildTools.jar -o release
